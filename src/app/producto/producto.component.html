@@ -1,0 +1,36 @@
+<div class="form-group" *ngIf="crud_operation.is_visible">
+    <label>Nombre</label>
+    <input type="text" class="form-control" [(ngModel)]="current_product.nombre" >
+    <label>Sku</label>
+    <input type="text" class="form-control" [(ngModel)]="current_product.sku" >
+    <label>Descripción</label>
+    <input type="text" class="form-control" [(ngModel)]="current_product.descripcion" >
+    <button class="btn btn-primary" (click)="save()">Salvar</button>
+    <button class="btn btn-danger" (click)="crud_operation.is_visible = false">Cancelar</button>
+</div>
+<div class="panel-body">
+    <table class="table table-striped table-over">
+        <tr>
+            <th>ID</th>
+            <th>NOMBRE</th>
+            <th>SKU</th>
+            <th>DESCRIPCIÓN</th>
+            <th>Cantidad</th>
+            <th class="text-right">
+                <button class="btn btn-success" (click)="new()">Nuevo</button>
+            </th>
+        </tr>
+        <tr *ngFor="let row of data">
+            <td>{{ row.id }}</td>
+            <td>{{ row.nombre }}</td>
+            <td>{{ row.sku }}</td>
+            <td>{{ row.descripcion }}</td>
+            <th>
+                <form #form="ngForm" (ngSubmit)="saveProductoCart(row.id, form)">
+                    <input type="number" class="form-control" required ngModel name="quantity">
+                    <button class="btn btn-primary btn btn-block" type="submit">Agregar al carrito</button>
+                </form>
+            </th>
+        </tr>
+    </table>
+</div>
