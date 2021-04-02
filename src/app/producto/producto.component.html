@@ -24,12 +24,12 @@
             <th>PRECIO</th>
             <th>IMPUESTO</th>
             <th>STOCK</th>
-            <th>CANTIDAD AL CARRITO</th>
+            <th>CANTIDAD AL CARRITO {{ q }}</th>
             <th class="text-right">
                 <button class="btn btn-success" (click)="new()">Nuevo</button>
             </th>
         </tr>
-        <tr *ngFor="let row of collection.data">
+        <tr *ngFor="let row of collection.data; let index = index; trackBy:trackByIndex;">
             <td>{{ row.nombre }}</td>
             <td>{{ row.codigo }}</td>
             <td>{{ row.descripcion }}</td>
@@ -38,8 +38,9 @@
             <td>{{ row.stock }}</td>
             <th>
                 <form [formGroup]="productCartForm" (ngSubmit)="saveProductoCart(row.id, row.nombre, row.descripcion, row.codigo, row.precio, row.impuesto, row.stock)">
-                    <input type="number" class="form-control" required formControlName="quantity">
-                    <button class="btn btn-primary btn btn-block" type="submit">Agregar al carrito</button>
+                    <input type="number" class="form-control" required formControlName="quantity" [(ngModel)]="collection[index]">
+                    <button *ngIf="collection[index] <= row.stock && collection[index] > 0" class="btn btn-primary btn btn-block" type="submit">Agregar al carrito</button>
+                    <div class="alert alert-danger" *ngIf="collection[index] > row.stock" role="alert">¡Sobrepasa el stock!</div>
                 </form>
             </th>
         </tr>

@@ -20,6 +20,10 @@ export class CarritoComponent implements OnInit {
 
   constructor(public firebaseServiceService: FirebaseServiceService, public fb: FormBuilder) {}
 
+  trackByIndex(index: number, obj: any): any {
+    return index;
+  }
+
   ngOnInit(): void {
     
     this.productCartForm = this.fb.group({

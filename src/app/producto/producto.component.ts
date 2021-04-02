@@ -22,8 +22,13 @@ export class ProductoComponent implements OnInit {
 
   collection = {count: 0, data: []}
 
+  q: any
 
   constructor(private firebaseServiceService: FirebaseServiceService, public fb: FormBuilder) {}
+
+  trackByIndex(index: number, obj: any): any {
+    return index;
+  }
   
 
   ngOnInit(): void {

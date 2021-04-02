@@ -11,7 +11,7 @@
             <th>ESTADO</th>
             <th><button class="btn btn-success" (click)="updateCard(1)">Pagar carrito</button></th>
         </tr>
-        <tr *ngFor="let row of collection.data">
+        <tr *ngFor="let row of collection.data; let index = index; trackBy:trackByIndex;">
             <td>{{ row.nombre }}</td>
             <td>{{ row.codigo }}</td>
             <td>{{ row.descripcion }}</td>
@@ -21,7 +21,7 @@
             <td *ngIf="!row.confirm2">{{ row.quantity }}</td>
             <td *ngIf="row.confirm2">
                 <form [formGroup]="productCartForm">
-                    <input type="number" required class="form-control" [value]="row.quantity" formControlName="quantity">
+                    <input type="number" required class="form-control" [(ngModel)]="collection[index]" formControlName="quantity">
                 </form>
             </td>
             <td> No pago </td>
@@ -36,7 +36,8 @@
                 </div>
                 <div *ngIf="row.confirm2">
                     <form [formGroup]="productCartForm" (ngSubmit)="update(row.id, row.product_key, row.nombre, row.descripcion, row.codigo, row.precio, row.impuesto, row.stock)">
-                        <button class="btn btn-success" type="submit">Confirmar</button>
+                        <button class="btn btn-success" type="submit" *ngIf="collection[index] <= row.stock && collection[index] > 0">Confirmar</button>
+                        <div class="btn btn-danger" *ngIf="collection[index] > row.stock" role="alert">¡Sobrepasa el stock!</div>
                         <button class="btn btn-warning" (click) = "row.confirm2 = false">Cancelar</button>
                     </form>
                 </div>
