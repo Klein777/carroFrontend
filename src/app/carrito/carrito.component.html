@@ -2,21 +2,29 @@
     <table class="table table-striped table-over">
         <tr>
             <th>NOMBRE</th>
-            <th>SKU</th>
+            <th>CÓDIGO</th>
             <th>DESCRIPCIÓN</th>
-            <th>Cantidad</th>
-            <th>Estado</th>
-            <th><button class="btn btn-success" (click)="updateCard(1)">Marcar checkout</button></th>
+            <th>PRECIO</th>
+            <th>STOCK</th>
+            <th>IMPUESTO</th>
+            <th>CANTIDAD</th>
+            <th>ESTADO</th>
+            <th><button class="btn btn-success" (click)="updateCard(1)">Pagar carrito</button></th>
         </tr>
-        <tr *ngFor="let row of data">
+        <tr *ngFor="let row of collection.data">
             <td>{{ row.nombre }}</td>
-            <td>{{ row.sku }}</td>
+            <td>{{ row.codigo }}</td>
             <td>{{ row.descripcion }}</td>
+            <td>{{ row.precio }}</td>
+            <td>{{ row.stock }}</td>
+            <td>{{ row.impuesto }}</td>
             <td *ngIf="!row.confirm2">{{ row.quantity }}</td>
             <td *ngIf="row.confirm2">
-                <input type="number" required class="form-control" [value]="row.quantity" [(ngModel)]="current_product_card.quantity">
+                <form [formGroup]="productCartForm">
+                    <input type="number" required class="form-control" [value]="row.quantity" formControlName="quantity">
+                </form>
             </td>
-            <td>{{ row.status }}</td>
+            <td> No pago </td>
             <td class="text-right">
                 <div *ngIf="!row.confirm && !row.confirm2">
                     <button class="btn btn-danger" (click)="row.confirm = true">Eliminar</button>
@@ -27,8 +35,10 @@
                     <button class="btn btn-warning" (click)="row.confirm = false">Cancelar</button>
                 </div>
                 <div *ngIf="row.confirm2">
-                    <button class="btn btn-success" (click)="update(row.product_id, row.id)">Confirmar</button>
-                    <button class="btn btn-warning" (click) = "row.confirm2 = false">Cancelar</button>
+                    <form [formGroup]="productCartForm" (ngSubmit)="update(row.id, row.product_key, row.nombre, row.descripcion, row.codigo, row.precio, row.impuesto, row.stock)">
+                        <button class="btn btn-success" type="submit">Confirmar</button>
+                        <button class="btn btn-warning" (click) = "row.confirm2 = false">Cancelar</button>
+                    </form>
                 </div>
             </td>
         </tr>

@@ -9,6 +9,9 @@ import { FormsModule } from '@angular/forms'
 import { HttpClientModule } from '@angular/common/http';
 import { MenuComponent } from './menu/menu.component';
 import { CarritoComponent } from './carrito/carrito.component';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from '../environments/environment';
+import {ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,7 +24,9 @@ import { CarritoComponent } from './carrito/carrito.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [ProductoService],
   bootstrap: [AppComponent]

@@ -5,6 +5,5 @@ export class Producto {
     descripcion:string
 
     constructor(){
-        
     }
 }

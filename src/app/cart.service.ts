@@ -10,6 +10,6 @@ export class CartService {
   data: Cart[]
   constructor(private http: HttpClient) { }
   update(data: Cart){
-    return this.http.put('http://localhost:8080/updatecard/' + data.id, data)
+    return this.http.put('http://127.0.0.1:8000/updatecard/' + data.id, data)
   }
 }

@@ -10,9 +10,9 @@ export class ProductoService {
   constructor(private http: HttpClient) { }
 
   read(){
-    return this.http.get('http://localhost:8080/product')
+    return this.http.get('http://127.0.0.1:8000/productos')
   }
   insert(data: Producto){
-    return this.http.post('http://localhost:8080/product', data)
+    return this.http.post('http://127.0.0.1:8000/productos', data)
   }
 }

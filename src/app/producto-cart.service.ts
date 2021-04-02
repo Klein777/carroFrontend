@@ -11,15 +11,15 @@ export class ProductoCartService {
   constructor(private http: HttpClient) { }
 
   read(){
-    return this.http.get('http://localhost:8080/carritodetalles')
+    return this.http.get('http://127.0.0.1:8000/carritodetalles')
   }
   insert(data: ProductoCart){
-    return this.http.post('http://localhost:8080/carritodetalles', data)
+    return this.http.post('http://127.0.0.1:8000/carritodetalles', data)
   }
   update(data: ProductoCart){
-    return this.http.put('http://localhost:8080/carritodetalles/' + data.id, data)
+    return this.http.put('http://127.0.0.1:8000/carritodetalles/' + data.id, data)
   }
   delete(id){
-    return this.http.delete('http://localhost:8080/carritodetalles/' + id)
+    return this.http.delete('http://127.0.0.1:8000/carritodetalles/' + id)
   }
 }
