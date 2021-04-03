@@ -5,18 +5,16 @@
             <th>CÓDIGO</th>
             <th>DESCRIPCIÓN</th>
             <th>PRECIO</th>
-            <th>STOCK</th>
             <th>IMPUESTO</th>
             <th>CANTIDAD</th>
             <th>ESTADO</th>
-            <th><button class="btn btn-success" (click)="updateCard(1)">Pagar carrito</button></th>
+            <th *ngIf="collection.data.length > 0"><button class="btn btn-success" (click)="saveFactura()">Pagar carrito</button></th>
         </tr>
         <tr *ngFor="let row of collection.data; let index = index; trackBy:trackByIndex;">
             <td>{{ row.nombre }}</td>
             <td>{{ row.codigo }}</td>
             <td>{{ row.descripcion }}</td>
             <td>{{ row.precio }}</td>
-            <td>{{ row.stock }}</td>
             <td>{{ row.impuesto }}</td>
             <td *ngIf="!row.confirm2">{{ row.quantity }}</td>
             <td *ngIf="row.confirm2">
@@ -31,7 +29,7 @@
                     <button class="btn btn-primary" (click)="row.confirm2 = true">Actualizar</button>
                 </div>
                 <div *ngIf="row.confirm">
-                    <button class="btn btn-success" (click)="delete(row.id)">Confirmar</button>
+                    <button class="btn btn-success" (click)="delete(row.id, row.product_key, row.nombre, row.descripcion, row.codigo, row.precio, row.impuesto, row.stock)">Confirmar</button>
                     <button class="btn btn-warning" (click)="row.confirm = false">Cancelar</button>
                 </div>
                 <div *ngIf="row.confirm2">

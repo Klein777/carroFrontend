@@ -3,6 +3,7 @@ import { Producto } from '../producto'
 import { ProductoCart } from '../producto-cart'
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { FirebaseServiceService } from '../services/firebase-service.service'
+import { ToastrService } from 'ngx-toastr'
 
 @Component({
   selector: 'app-producto',
@@ -11,20 +12,26 @@ import { FirebaseServiceService } from '../services/firebase-service.service'
 })
 export class ProductoComponent implements OnInit {
 
-  productForm: FormGroup;
-  productCartForm: FormGroup;
+  productForm: FormGroup
+  productCartForm: FormGroup
+  transactionProductForm: FormGroup
 
   current_product : Producto
 
   current_product_card : ProductoCart
 
+  p_quantity = 0
+  p_stock = 0
+
   crud_operation = {is_new: false, is_visible: false}
 
   collection = {count: 0, data: []}
 
-  q: any
+  tr_nombre: any
+  tr_stock: any
+  tr_codigo: any
 
-  constructor(private firebaseServiceService: FirebaseServiceService, public fb: FormBuilder) {}
+  constructor(private firebaseServiceService: FirebaseServiceService, public fb: FormBuilder, private toastr: ToastrService) {}
 
   trackByIndex(index: number, obj: any): any {
     return index;
@@ -54,6 +61,13 @@ export class ProductoComponent implements OnInit {
       quantity: ['', Validators.required],
     });
 
+    this.transactionProductForm = this.fb.group({
+      tipo: ['', Validators.required],
+      nombre: ['', Validators.required],
+      stock: ['', Validators.required],
+      codigo: ['', Validators.required],
+    });
+
     this.firebaseServiceService.readProducts().subscribe(resp => {
       this.collection.data = resp.map((e: any) => {
         return {
@@ -67,9 +81,6 @@ export class ProductoComponent implements OnInit {
         }
       })
     })
-
-    this.current_product = new Producto()
-    this.current_product_card = new ProductoCart()
 
   }
 
@@ -86,8 +97,22 @@ export class ProductoComponent implements OnInit {
         this.current_product = new Producto()
         this.crud_operation.is_visible = false
         this.ngOnInit()
+        this.toastr.success('Producto creado con exito')
       })
+      this.saveTr()
     }
+  }
+
+  saveTr(){
+    this.transactionProductForm.patchValue({
+      tipo: "entrada",
+      nombre: this.tr_nombre,
+      codigo: this.tr_codigo,
+      stock: this.tr_stock
+    });
+    this.firebaseServiceService.insertProductTr(this.transactionProductForm.value).then(res=>{
+      this.transactionProductForm.reset()
+    })
   }
 
   saveProductoCart(key, nombre, descripcion, codigo, precio, impuesto, stock){
@@ -102,11 +127,36 @@ export class ProductoComponent implements OnInit {
       cart_key: 1
     });
     this.firebaseServiceService.insertProductCart(this.productCartForm.value).then(res=>{
+      this.updateStockOfProduct(key, stock, nombre, descripcion, codigo, precio, impuesto)
       this.productCartForm.reset()
       this.current_product = new Producto()
       this.crud_operation.is_visible = false
       this.ngOnInit()
+      this.toastr.success('Producto agregado al carrito')
     })
+  }
+
+  updateStockOfProduct(id: any, stock, nombre, descripcion, codigo, precio, impuesto){
+    if(!(id === null || id === undefined)){
+
+      this.p_quantity = Number(this.productCartForm.value["quantity"])//numero que escribe el usuario
+      this.p_stock = Number(stock)//numero del articulo
+
+      this.p_stock = this.p_stock - this.p_quantity//numero que queda
+
+      this.productForm.patchValue({
+        nombre: nombre,
+        descripcion: descripcion,
+        codigo: codigo,
+        precio: precio,
+        impuesto: impuesto,
+        stock: this.p_stock
+      })
+      this.firebaseServiceService.updateProductStock(id, this.productForm.value).then(res=>{
+        this.current_product_card = new ProductoCart()
+        this.ngOnInit()
+      })
+    }
   }
 
 }

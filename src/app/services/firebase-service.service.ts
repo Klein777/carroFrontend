@@ -18,19 +18,15 @@ export class FirebaseServiceService {
     return this.firestore.collection("products").add(product)
   }
 
+  insertProductTr(transaction: any){
+    return this.firestore.collection("transactions_products").add(transaction)
+  }
+
+  insertFacturaTr(factura: any){
+    return this.firestore.collection("facturas").add(factura)
+  }
+
   readProductCart(){
-    /**var productCartCollection = this.firestore.collection("product_cart").snapshotChanges()
-    var productCollection = this.firestore.collection('products', (ref) =>
-      ref.where('id', '==', key)
-    ).get()
-    var cart = [];
-    cart.push(productCartCollection);
-    cart.push(productCollection);
-
-    var res = Promise.all(cart);
-
-    return cart**/
-    
     return this.firestore.collection("product_cart").snapshotChanges()
   }
 
@@ -49,8 +45,8 @@ export class FirebaseServiceService {
     return this.firestore.collection("product_cart").doc(id).delete()
   }
 
-  updateCart(id: any, cart: any){
-    return this.firestore.collection("product_cart").doc(id).update(cart)
+  updateProductStock(id: any, product: any){
+    return this.firestore.collection("products").doc(id).update(product)
   }
 
 }
